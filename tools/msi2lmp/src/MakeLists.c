@@ -409,8 +409,7 @@ void build_dihedrals_list()
   return;
 }
 
-int
-count_oops()
+int count_oops()
 {
   int j,n;
 
@@ -476,28 +475,30 @@ void build_atomtypes_list()
 {
   int j,k,n,match,atom_type=0;
 
-  strncpy(atomtypes[0].potential,atoms[0].potential,5);
   atoms[0].type = 0;
-
+  strncpy(atomtypes[0].potential,atoms[0].potential,5);
   atomtypes[0].no_connect = atoms[0].no_connect;
+  strncpy(atomtypes[0].element, atoms[0].element, 4);
 
   for (n=1,j=1; j < total_no_atoms; j++) {
     match = 0;
     k = 0;
     while (!match && (k < n)) {
-      if (strncmp(atomtypes[k].potential,atoms[j].potential,5) == 0) {
+      if ((strncmp(atomtypes[k].potential,atoms[j].potential,5) == 0) && (strncmp(atomtypes[k].element, atoms[j].element, 4) == 0)) {
         match = 1;
         atom_type = k;
         if (atomtypes[k].no_connect != atoms[j].no_connect) {
           if (pflag > 0) fprintf(stderr," WARNING inconsistent # of connects on atom %d type %s\n",j,
                                  atomtypes[k].potential);
         }
-      } else k++;
+      }
+	  else k++;
     }
     if (match == 0) {
       atom_type = n;
       atomtypes[n].no_connect = atoms[j].no_connect;
-      strncpy(atomtypes[n++].potential,atoms[j].potential,5);
+      strncpy(atomtypes[n].potential,atoms[j].potential,5);
+	  strncpy(atomtypes[n++].element, atoms[j].element, 4);
     }
     if (n >= MAX_ATOM_TYPES) {
       fprintf(stderr,"Too many atom types (> 100) - error\n");

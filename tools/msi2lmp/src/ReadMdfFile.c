@@ -255,6 +255,7 @@ void ReadMdfFile(void)
 
   */
 
+
   /* Close .mdf file */
 
   if (fclose(MdfF) !=0) {

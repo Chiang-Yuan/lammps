@@ -2,6 +2,9 @@
 *
 *  msi2lmp.exe
 *
+*	v4.0.0 CY- Read atom_type from .car file to AtomTypeList atomtypes in 
+*			   build_atomtypes_list()
+*
 *   v3.9.9 AK- Teach msi2lmp to not generate dihedrals with identical 1-4 atoms
 *
 *   v3.9.8 AK- Improved whitespace handling in parsing topology and force

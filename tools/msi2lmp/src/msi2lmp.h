@@ -109,6 +109,8 @@ struct AtomTypeList
   double mass;
   double params[2];
   int no_connect;
+  
+  char element[4];
 };
 
 struct BondTypeList {

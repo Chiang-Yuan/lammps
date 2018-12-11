@@ -200,7 +200,8 @@ void SearchAndFill(struct FrcFieldItem *item)
         for (i=0; i < item->number_of_parameters; i++) {
           item->data[replace].ff_param[i] = parameters[i];
         }
-      } else {
+      } 
+	  else {
         if (pflag > 1) {
           fprintf(stderr," Using higher version of parameters for");
           fprintf(stderr," %s  ",item->keyword);
@@ -209,7 +210,8 @@ void SearchAndFill(struct FrcFieldItem *item)
           fprintf(stderr," version %3.2f\n",item->data[replace].ver);
         }
       }
-    } else {
+    } 
+	else {
       item->data[ctr].ver = version;
       item->data[ctr].ref = reference;
       for (i=0; i < item->number_of_members; i++) {

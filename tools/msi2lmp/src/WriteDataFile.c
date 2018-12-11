@@ -144,7 +144,7 @@ void WriteDataFile(char *nameroot)
       else if (forcefield & FF_TYPE_CLASS2)
         fputs(" # class2\n\n",DatF);
     } else fputs("\n\n",DatF);
-
+    
     for (i=0; i < no_angle_types; i++) {
       fprintf(DatF, " %3i", i+1);
       for ( j = 0; j < m; j++)
@@ -388,11 +388,12 @@ void WriteDataFile(char *nameroot)
   else fputs("Atoms\n\n",DatF);
 
   for(k=0; k < total_no_atoms; k++) {
-    int typ = atoms[k].type;
+    //int typ = atoms[k].type;
     fprintf(DatF," %6i %6i %3i %9.6f %15.9f %15.9f %15.9f %3i %3i %3i",
             k+1,
             atoms[k].molecule,
-            typ+1,
+            //typ+1,
+			atoms[k].type + 1,
             atoms[k].q,
             atoms[k].x[0],
             atoms[k].x[1],
@@ -400,7 +401,7 @@ void WriteDataFile(char *nameroot)
             atoms[k].image[0],
             atoms[k].image[1],
             atoms[k].image[2]);
-    if (hintflag) fprintf(DatF," # %s\n",atomtypes[typ].potential);
+    if (hintflag) fprintf(DatF," # %s\n",atomtypes[atoms[k].type].potential);
     else fputs("\n",DatF);
   }
   fputs("\n",DatF);

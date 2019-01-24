@@ -61,43 +61,43 @@
 #define FF_TYPE_OPLSAA       1<<3
 
 struct ResidueList {
-  int start;
-  int end;
-  char name[MAX_NAME];
+	int start;
+	int end;
+	char name[MAX_NAME];
 };
 
 struct MoleculeList {
-  int start;
-  int end;
-  int no_residues;
-  struct ResidueList *residue;
+	int start;
+	int end;
+	int no_residues;
+	struct ResidueList *residue;
 };
 
 /* Internal coodinate Lists */
 
 struct BondList {
-  int type;
-  int members[2];
+	int type;
+	int members[2];
 };
 
 struct AngleList {
-  int type;
-  int members[3];
+	int type;
+	int members[3];
 };
 
 struct DihedralList {
-  int type;
-  int members[4];
+	int type;
+	int members[4];
 };
 
 struct OOPList {
-  int type;
-  int members[4];
+	int type;
+	int members[4];
 };
 
 struct AngleAngleList {
-  int type;
-  int members[4];
+	int type;
+	int members[4];
 };
 
 /* Internal coodinate Types Lists */
@@ -105,64 +105,64 @@ struct AngleAngleList {
 
 struct AtomTypeList
 {
-  char potential[5];
-  double mass;
-  double params[2];
-  int no_connect;
-  
-  char element[4];
+	char potential[5];
+	double mass;
+	double params[2];
+	int no_connect;
+
+	char element[4];
 };
 
 struct BondTypeList {
-  int types[2];
-  double params[4];
+	int types[2];
+	double params[4];
 };
 
 struct AngleTypeList {
-  int types[3];
-  double params[4];
-  double bondangle_cross_term[4];
-  double bondbond_cross_term[3];
+	int types[3];
+	double params[4];
+	double bondangle_cross_term[4];
+	double bondbond_cross_term[3];
 };
 
 struct DihedralTypeList {
-  int types[4];
-  double params[6];
-  double endbonddihedral_cross_term[8];
-  double midbonddihedral_cross_term[4];
-  double angledihedral_cross_term[8];
-  double angleangledihedral_cross_term[3];
-  double bond13_cross_term[3];
+	int types[4];
+	double params[6];
+	double endbonddihedral_cross_term[8];
+	double midbonddihedral_cross_term[4];
+	double angledihedral_cross_term[8];
+	double angleangledihedral_cross_term[3];
+	double bond13_cross_term[3];
 };
 
 struct OOPTypeList {
-  int types[4];
-  double params[3];
-  double angleangle_params[6];
+	int types[4];
+	double params[3];
+	double angleangle_params[6];
 };
 
 struct AngleAngleTypeList {
-  int types[4];
-  double params[6];
+	int types[4];
+	double params[6];
 };
 
 /* ---------------------------------------------- */
 
 struct Atom {
-  int   molecule;        /* molecule id */
-  int   no;              /* atom id */
-  char  name[MAX_NAME];  /* atom name */
-  double x[3];           /* position vector */
-  int   image[3];        /* image flag */
-  char  potential[6];    /* atom potential type */
-  char  element[4];      /* atom element */
-  double q;              /* charge */
-  char  residue_string[MAX_NAME]; /* residue string */
-  int  no_connect;        /* number of connections to atom */
-  char connections[MAX_CONNECTIONS][MAX_STRING];  /* long form, connection name*/
-  double bond_order[MAX_CONNECTIONS];
-  int conn_no[MAX_CONNECTIONS];         /* Atom number to which atom is connected */
-  int type;
+	int   molecule;        /* molecule id */
+	int   no;              /* atom id */
+	char  name[MAX_NAME];  /* atom name */
+	double x[3];           /* position vector */
+	int   image[3];        /* image flag */
+	char  potential[6];    /* atom potential type */
+	char  element[4];      /* atom element */
+	double q;              /* charge */
+	char  residue_string[MAX_NAME]; /* residue string */
+	int  no_connect;        /* number of connections to atom */
+	char connections[MAX_CONNECTIONS][MAX_STRING];  /* long form, connection name*/
+	double bond_order[MAX_CONNECTIONS];
+	int conn_no[MAX_CONNECTIONS];         /* Atom number to which atom is connected */
+	int type;
 };
 
 extern char  *rootname;
@@ -173,7 +173,7 @@ extern double shift[3];      /* shift vector for all coordinates and box positio
 extern int    periodic;      /* 0= nonperiodic 1= 3-D periodic */
 extern int    TriclinicFlag; /* 0= Orthogonal  1= Triclinic */
 extern int    forcefield;    /* BitMask: the value FF_TYPE_COMMON is set for common components of the options below,
-                              * FF_TYPE_CLASS1 = ClassI,  FF_TYPE_CLASS2 = ClassII, FF_TYPE_OPLSAA = OPLS-AA*/
+							  * FF_TYPE_CLASS1 = ClassI,  FF_TYPE_CLASS2 = ClassII, FF_TYPE_OPLSAA = OPLS-AA*/
 extern int    ljtypeflag;    /* how LJ parameters are stored: 0 = A-B, 1 = r-eps */
 extern int    centerflag;    /* 1= center box  0= keep box */
 extern int    hintflag;      /* 1= print style hint comments  0= no hints */

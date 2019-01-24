@@ -2,7 +2,7 @@
 *
 *  msi2lmp.exe
 *
-*	v4.0.0 CY- Read atom_type from .car file to AtomTypeList atomtypes in 
+*	v4.0.0 CY- Read atom_type from .car file to AtomTypeList atomtypes in
 *			   build_atomtypes_list()
 *
 *   v3.9.9 AK- Teach msi2lmp to not generate dihedrals with identical 1-4 atoms
@@ -209,236 +209,250 @@ struct AngleAngleTypeList *angleangletypes = NULL;
 
 void condexit(int val)
 {
-    if (iflag == 0) exit(val);
+	if (iflag == 0) exit(val);
 }
 
 static int check_arg(char **arg, const char *flag, int num, int argc)
 {
-  if (num >= argc) {
-    printf("Missing argument to \"%s\" flag\n",flag);
-    return 1;
-  }
-  if (arg[num][0] == '-') {
-    printf("Incorrect argument to \"%s\" flag: %s\n",flag,arg[num]);
-    return 1;
-  }
-  return 0;
+	if (num >= argc) {
+		printf("Missing argument to \"%s\" flag\n", flag);
+		return 1;
+	}
+	if (arg[num][0] == '-') {
+		printf("Incorrect argument to \"%s\" flag: %s\n", flag, arg[num]);
+		return 1;
+	}
+	return 0;
 }
 
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  int n,i,found_sep;
-  const char *frc_dir_name = NULL;
-  const char *frc_file_name = NULL;
+	int n, i, found_sep;
+	const char *frc_dir_name = NULL;
+	const char *frc_file_name = NULL;
 
-  pflag = 1;
-  iflag = 0;
-  forcefield = FF_TYPE_CLASS1 | FF_TYPE_COMMON;
-  shift[0] = shift[1] = shift[2] = 0.0;
+	pflag = 1;
+	iflag = 0;
+	forcefield = FF_TYPE_CLASS1 | FF_TYPE_COMMON;
+	shift[0] = shift[1] = shift[2] = 0.0;
 
-  frc_dir_name = getenv("MSI2LMP_LIBRARY");
+	frc_dir_name = getenv("MSI2LMP_LIBRARY");
 
-  if (argc < 2) {
-    printf("usage: %s <rootname> [-class <I|1|II|2>] [-frc <path to frc file>] [-print #] [-ignore] [-nocenter] [-oldstyle]\n",argv[0]);
-    return 1;
-  } else { /* rootname was supplied as first argument, copy to rootname */
-    int len = strlen(argv[1]) + 1;
-    rootname = (char *)malloc(len);
-    strcpy(rootname,argv[1]);
-  }
+	if (argc < 2) {
+		printf("usage: %s <rootname> [-class <I|1|II|2>] [-frc <path to frc file>] [-print #] [-ignore] [-nocenter] [-oldstyle]\n", argv[0]);
+		return 1;
+	}
+	else { /* rootname was supplied as first argument, copy to rootname */
+		int len = strlen(argv[1]) + 1;
+		rootname = (char *)malloc(len);
+		strcpy(rootname, argv[1]);
+	}
 
-  n = 2;
-  while (n < argc) {
-    if (strncmp(argv[n],"-c",2) == 0) {
-      n++;
-      if (check_arg(argv,"-class",n,argc))
-        return 2;
-      if ((strcmp(argv[n],"I") == 0) || (strcmp(argv[n],"1") == 0)) {
-        forcefield = FF_TYPE_CLASS1 | FF_TYPE_COMMON;
-      } else if ((strcmp(argv[n],"II") == 0) || (strcmp(argv[n],"2") == 0)) {
-        forcefield = FF_TYPE_CLASS2 | FF_TYPE_COMMON;
-      } else if ((strcmp(argv[n],"O") == 0) || (strcmp(argv[n],"0") == 0)) {
-        forcefield = FF_TYPE_OPLSAA | FF_TYPE_COMMON;
-      } else {
-        printf("Unrecognized Forcefield class: %s\n",argv[n]);
-        return 3;
-      }
-    } else if (strncmp(argv[n],"-f",2) == 0) {
-      n++;
-      if (check_arg(argv,"-frc",n,argc))
-        return 4;
-      frc_file_name = argv[n];
-    } else if (strncmp(argv[n],"-s",2) == 0) {
-      if (n+3 > argc) {
-        printf("Missing argument(s) to \"-shift\" flag\n");
-        return 1;
-      }
-      shift[0] = atof(argv[++n]);
-      shift[1] = atof(argv[++n]);
-      shift[2] = atof(argv[++n]);
-    } else if (strncmp(argv[n],"-i",2) == 0 ) {
-      iflag = 1;
-    } else if (strncmp(argv[n],"-n",2) == 0 ) {
-      centerflag = 0;
-    } else if (strncmp(argv[n],"-o",2) == 0 ) {
-      hintflag = 0;
-    } else if (strncmp(argv[n],"-p",2) == 0) {
-      n++;
-      if (check_arg(argv,"-print",n,argc))
-        return 5;
-      pflag = atoi(argv[n]);
-    } else {
-      printf("Unrecognized option: %s\n",argv[n]);
-      return 6;
-    }
-    n++;
-  }
+	n = 2;
+	while (n < argc) {
+		if (strncmp(argv[n], "-c", 2) == 0) {
+			n++;
+			if (check_arg(argv, "-class", n, argc))
+				return 2;
+			if ((strcmp(argv[n], "I") == 0) || (strcmp(argv[n], "1") == 0)) {
+				forcefield = FF_TYPE_CLASS1 | FF_TYPE_COMMON;
+			}
+			else if ((strcmp(argv[n], "II") == 0) || (strcmp(argv[n], "2") == 0)) {
+				forcefield = FF_TYPE_CLASS2 | FF_TYPE_COMMON;
+			}
+			else if ((strcmp(argv[n], "O") == 0) || (strcmp(argv[n], "0") == 0)) {
+				forcefield = FF_TYPE_OPLSAA | FF_TYPE_COMMON;
+			}
+			else {
+				printf("Unrecognized Forcefield class: %s\n", argv[n]);
+				return 3;
+			}
+		}
+		else if (strncmp(argv[n], "-f", 2) == 0) {
+			n++;
+			if (check_arg(argv, "-frc", n, argc))
+				return 4;
+			frc_file_name = argv[n];
+		}
+		else if (strncmp(argv[n], "-s", 2) == 0) {
+			if (n + 3 > argc) {
+				printf("Missing argument(s) to \"-shift\" flag\n");
+				return 1;
+			}
+			shift[0] = atof(argv[++n]);
+			shift[1] = atof(argv[++n]);
+			shift[2] = atof(argv[++n]);
+		}
+		else if (strncmp(argv[n], "-i", 2) == 0) {
+			iflag = 1;
+		}
+		else if (strncmp(argv[n], "-n", 2) == 0) {
+			centerflag = 0;
+		}
+		else if (strncmp(argv[n], "-o", 2) == 0) {
+			hintflag = 0;
+		}
+		else if (strncmp(argv[n], "-p", 2) == 0) {
+			n++;
+			if (check_arg(argv, "-print", n, argc))
+				return 5;
+			pflag = atoi(argv[n]);
+		}
+		else {
+			printf("Unrecognized option: %s\n", argv[n]);
+			return 6;
+		}
+		n++;
+	}
 
-  /* set defaults, if nothing else was given */
-  if (frc_dir_name == NULL)
+	/* set defaults, if nothing else was given */
+	if (frc_dir_name == NULL)
 #if (_WIN32)
-    frc_dir_name = "..\\frc_files";
+		frc_dir_name = "..\\frc_files";
 #else
-  frc_dir_name = "../frc_files";
+		frc_dir_name = "../frc_files";
 #endif
-  if (frc_file_name == NULL)
-    frc_file_name = "cvff.frc";
+	if (frc_file_name == NULL)
+		frc_file_name = "cvff.frc";
 
-  found_sep=0;
+	found_sep = 0;
 #ifdef _WIN32
-  if (isalpha(frc_file_name[0]) && (frc_file_name[1] == ':'))
-    found_sep=1; /* windows drive letter => full path. */
+	if (isalpha(frc_file_name[0]) && (frc_file_name[1] == ':'))
+		found_sep = 1; /* windows drive letter => full path. */
 #endif
 
-  n = strlen(frc_file_name);
-  for (i=0; i < n; ++i) {
+	n = strlen(frc_file_name);
+	for (i = 0; i < n; ++i) {
 #ifdef _WIN32
-    if ((frc_file_name[i] == '/') || (frc_file_name[i] == '\\'))
-      found_sep=1+i;
+		if ((frc_file_name[i] == '/') || (frc_file_name[i] == '\\'))
+			found_sep = 1 + i;
 #else
-    if (frc_file_name[i] == '/')
-      found_sep=1+i;
+		if (frc_file_name[i] == '/')
+			found_sep = 1 + i;
 #endif
-  }
+	}
 
-  /* full pathname given */
-  if (found_sep) {
-    i = 0;
-    /* need to append extension? */
-    if ((n < 5) || (strcmp(frc_file_name+n-4,".frc") !=0))
-      i=1;
+	/* full pathname given */
+	if (found_sep) {
+		i = 0;
+		/* need to append extension? */
+		if ((n < 5) || (strcmp(frc_file_name + n - 4, ".frc") != 0))
+			i = 1;
 
-    FrcFileName = (char *)malloc(n+1+i*4);
-    strcpy(FrcFileName,frc_file_name);
-    if (i) strcat(FrcFileName,".frc");
-  } else {
-    i = 0;
-    /* need to append extension? */
-    if ((n < 5) || (strcmp(frc_file_name+n-4,".frc") !=0))
-      i=1;
+		FrcFileName = (char *)malloc(n + 1 + i * 4);
+		strcpy(FrcFileName, frc_file_name);
+		if (i) strcat(FrcFileName, ".frc");
+	}
+	else {
+		i = 0;
+		/* need to append extension? */
+		if ((n < 5) || (strcmp(frc_file_name + n - 4, ".frc") != 0))
+			i = 1;
 
-    FrcFileName = (char *)malloc(n+2+i*4+strlen(frc_dir_name));
-    strcpy(FrcFileName,frc_dir_name);
+		FrcFileName = (char *)malloc(n + 2 + i * 4 + strlen(frc_dir_name));
+		strcpy(FrcFileName, frc_dir_name);
 #ifdef _WIN32
-    strcat(FrcFileName,"\\");
+		strcat(FrcFileName, "\\");
 #else
-    strcat(FrcFileName,"/");
+		strcat(FrcFileName, "/");
 #endif
-    strcat(FrcFileName,frc_file_name);
-    if (i) strcat(FrcFileName,".frc");
-  }
+		strcat(FrcFileName, frc_file_name);
+		if (i) strcat(FrcFileName, ".frc");
+	}
 
 
-  if (pflag > 0) {
-    puts("\nRunning msi2lmp " MSI2LMP_VERSION "\n");
-    if (forcefield & FF_TYPE_CLASS1) puts(" Forcefield: Class I");
-    if (forcefield & FF_TYPE_CLASS2) puts(" Forcefield: Class II");
-    if (forcefield & FF_TYPE_OPLSAA) puts(" Forcefield: OPLS-AA");
-    printf(" Forcefield file name: %s\n",FrcFileName);
-    if (centerflag) puts(" Output is recentered around geometrical center");
-    if (hintflag) puts(" Output contains style flag hints");
-    else puts(" Style flag hints disabled");
-    printf(" System translated by: %g %g %g\n",shift[0],shift[1],shift[2]);
-  }
+	if (pflag > 0) {
+		puts("\nRunning msi2lmp " MSI2LMP_VERSION "\n");
+		if (forcefield & FF_TYPE_CLASS1) puts(" Forcefield: Class I");
+		if (forcefield & FF_TYPE_CLASS2) puts(" Forcefield: Class II");
+		if (forcefield & FF_TYPE_OPLSAA) puts(" Forcefield: OPLS-AA");
+		printf(" Forcefield file name: %s\n", FrcFileName);
+		if (centerflag) puts(" Output is recentered around geometrical center");
+		if (hintflag) puts(" Output contains style flag hints");
+		else puts(" Style flag hints disabled");
+		printf(" System translated by: %g %g %g\n", shift[0], shift[1], shift[2]);
+	}
 
-  n = 0;
-  if (forcefield & FF_TYPE_CLASS1) {
-    if (strstr(FrcFileName,"cvff") != NULL) ++n;
-    if (strstr(FrcFileName,"clayff") != NULL) ++n;
-  } else if (forcefield & FF_TYPE_OPLSAA) {
-    if (strstr(FrcFileName,"oplsaa") != NULL) ++n;
-  } else if (forcefield & FF_TYPE_CLASS2) {
-    if (strstr(FrcFileName,"pcff") != NULL) ++n;
-    if (strstr(FrcFileName,"cff91") != NULL) ++n;
-    if (strstr(FrcFileName,"compass") != NULL) ++n;
-  }
+	n = 0;
+	if (forcefield & FF_TYPE_CLASS1) {
+		if (strstr(FrcFileName, "cvff") != NULL) ++n;
+		if (strstr(FrcFileName, "clayff") != NULL) ++n;
+	}
+	else if (forcefield & FF_TYPE_OPLSAA) {
+		if (strstr(FrcFileName, "oplsaa") != NULL) ++n;
+	}
+	else if (forcefield & FF_TYPE_CLASS2) {
+		if (strstr(FrcFileName, "pcff") != NULL) ++n;
+		if (strstr(FrcFileName, "cff91") != NULL) ++n;
+		if (strstr(FrcFileName, "compass") != NULL) ++n;
+	}
 
-  if (n == 0) {
-    if (iflag > 0) fputs(" WARNING",stderr);
-    else           fputs(" Error  ",stderr);
+	if (n == 0) {
+		if (iflag > 0) fputs(" WARNING", stderr);
+		else           fputs(" Error  ", stderr);
 
-    fputs("- forcefield name and class appear to be inconsistent\n\n",stderr);
-    if (iflag == 0) return 7;
-  }
+		fputs("- forcefield name and class appear to be inconsistent\n\n", stderr);
+		if (iflag == 0) return 7;
+	}
 
-  /* Read in .car file */
-  ReadCarFile();
+	/* Read in .car file */
+	ReadCarFile();
 
-  /*Read in .mdf file */
+	/*Read in .mdf file */
 
-  ReadMdfFile();
+	ReadMdfFile();
 
-  /* Define bonds, angles, etc...*/
+	/* Define bonds, angles, etc...*/
 
-  if (pflag > 0)
-    printf("\n Building internal coordinate lists \n");
-  MakeLists();
+	if (pflag > 0)
+		printf("\n Building internal coordinate lists \n");
+	MakeLists();
 
-  /* Read .frc file into memory */
+	/* Read .frc file into memory */
 
-  if (pflag > 0)
-    printf("\n Reading forcefield file \n");
-  ReadFrcFile();
+	if (pflag > 0)
+		printf("\n Reading forcefield file \n");
+	ReadFrcFile();
 
-  /* Get forcefield parameters */
+	/* Get forcefield parameters */
 
-  if (pflag > 0)
-    printf("\n Get force field parameters for this system\n");
-  GetParameters();
+	if (pflag > 0)
+		printf("\n Get force field parameters for this system\n");
+	GetParameters();
 
-  /* Do internal check of internal coordinate lists */
-  if (pflag > 0)
-    printf("\n Check parameters for internal consistency\n");
-  CheckLists();
+	/* Do internal check of internal coordinate lists */
+	if (pflag > 0)
+		printf("\n Check parameters for internal consistency\n");
+	CheckLists();
 
-  /* Write out the final data */
-  WriteDataFile(rootname);
+	/* Write out the final data */
+	WriteDataFile(rootname);
 
-  /* free up memory to detect possible memory corruption */
-  free(rootname);
-  free(FrcFileName);
-  ClearFrcData();
+	/* free up memory to detect possible memory corruption */
+	free(rootname);
+	free(FrcFileName);
+	ClearFrcData();
 
-  for (n=0; n < no_molecules; n++) {
-    free(molecule[n].residue);
-  }
+	for (n = 0; n < no_molecules; n++) {
+		free(molecule[n].residue);
+	}
 
-  free(no_atoms);
-  free(molecule);
-  free(atoms);
-  free(atomtypes);
-  if (bonds) free(bonds);
-  if (bondtypes) free(bondtypes);
-  if (angles) free(angles);
-  if (angletypes) free(angletypes);
-  if (dihedrals) free(dihedrals);
-  if (dihedraltypes) free(dihedraltypes);
-  if (oops) free(oops);
-  if (ooptypes) free(ooptypes);
-  if (angleangles) free(angleangles);
-  if (angleangletypes) free(angleangletypes);
+	free(no_atoms);
+	free(molecule);
+	free(atoms);
+	free(atomtypes);
+	if (bonds) free(bonds);
+	if (bondtypes) free(bondtypes);
+	if (angles) free(angles);
+	if (angletypes) free(angletypes);
+	if (dihedrals) free(dihedrals);
+	if (dihedraltypes) free(dihedraltypes);
+	if (oops) free(oops);
+	if (ooptypes) free(ooptypes);
+	if (angleangles) free(angleangles);
+	if (angleangletypes) free(angleangletypes);
 
-  if (pflag > 0)
-    printf("\nNormal program termination\n");
-  return 0;
+	if (pflag > 0)
+		printf("\nNormal program termination\n");
+	return 0;
 }
